@@ -11,7 +11,7 @@ async function analyzeAbsence(employeeId) {
     try {
 
         const response = await fetch(
-            "https://smart-reassign-ai.onrender.com",
+            "https://smart-reassign-ai.onrender.com/reassign",
             {
                 method: "POST",
                 headers: {
