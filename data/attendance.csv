@@ -1,0 +1,9 @@
+attendance_id,employee_id,date,shift,check_in,check_out,attendance_status,source
+A001,E001,2026-09-09,Morning,08:52,17:05,Present,Biometric
+A002,E002,2026-09-09,Morning,,,Absent,Biometric
+A003,E003,2026-09-09,Morning,08:48,17:10,Present,Biometric
+A004,E004,2026-09-09,Morning,08:55,17:00,Present,Biometric
+A005,E005,2026-09-09,Morning,08:50,17:15,Present,Biometric
+A006,E006,2026-09-09,Morning,,,Present,Biometric
+A007,E007,2026-09-09,Morning,08:47,17:08,Present,Biometric
+A008,E008,2026-09-09,Morning,08:58,17:02,Present,Biometric

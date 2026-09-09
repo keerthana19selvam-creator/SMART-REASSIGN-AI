@@ -1,0 +1,6 @@
+task_id,task_name,task_type,assigned_employee,priority,estimated_time,status
+T001,Order Picking Zone A,Picking,E001,High,45,In Progress
+T002,Product Packing Zone B,Packing,E002,Medium,40,In Progress
+T003,Inventory Sorting,Sorting,E005,High,35,In Progress
+T004,Order Picking Zone C,Picking,E007,High,50,In Progress
+T005,Product Packing Zone A,Packing,E003,Medium,30,In Progress

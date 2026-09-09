@@ -1,0 +1,9 @@
+employee_id,name,department,primary_skill,performance_score,avg_completion_time,error_rate,current_workload,availability
+E001,Arun,Warehouse,Picking,92,35,2,30,Yes
+E002,Priya,Warehouse,Packing,88,40,4,70,Yes
+E003,Kavin,Warehouse,Packing,95,30,1,25,Yes
+E004,Divya,Warehouse,Picking,85,45,5,50,Yes
+E005,Ravi,Warehouse,Sorting,90,38,3,20,Yes
+E006,Meena,Warehouse,Packing,82,42,6,80,No
+E007,Sanjay,Warehouse,Picking,94,32,2,35,Yes
+E008,Anitha,Warehouse,Sorting,87,40,4,45,Yes
