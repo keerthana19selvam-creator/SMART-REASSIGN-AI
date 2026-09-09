@@ -11,7 +11,7 @@ async function analyzeAbsence(employeeId) {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:5000/reassign",
+            "https://smart-reassign-ai.onrender.com",
             {
                 method: "POST",
                 headers: {
