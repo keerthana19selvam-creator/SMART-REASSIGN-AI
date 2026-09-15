@@ -1,38 +1,84 @@
-async function analyzeAbsence(employeeId) {
+var currentAbsentEmployee = null;
+var currentReplacementEmployee = null;
+var currentTaskName = null;
 
-    const resultSection = document.getElementById("result");
 
-    resultSection.classList.remove("hidden");
+// =============================================
+// BIOMETRIC SIMULATION
+// =============================================
 
-    document.getElementById("bestName").innerText = "Analyzing...";
-    document.getElementById("bestId").innerText = "";
-    document.getElementById("bestScore").innerText = "";
+function simulateBiometric() {
 
-    try {
+    var scanStatus = document.getElementById("scanStatus");
+    var scanEmployee = document.getElementById("scanEmployee");
+    var scanResult = document.getElementById("scanResult");
 
-        const response = await fetch(
-            "https://smart-reassign-ai.onrender.com/reassign",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    employee_id: employeeId
-                })
-            }
-        );
+    scanStatus.classList.remove("hidden");
 
-        const data = await response.json();
+    currentAbsentEmployee = "E002";
+
+    scanEmployee.innerText = "E002 - Priya";
+    scanResult.innerText = "ABSENT";
+}
+
+
+// =============================================
+// AI REASSIGNMENT
+// =============================================
+
+function analyzeAbsence(employeeId) {
+
+    currentAbsentEmployee = employeeId;
+
+    fetch("http://127.0.0.1:5000/ai-reassign", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            employee_id: employeeId,
+            task_type: "Packing",
+            task_name: "Product Packing Zone B"
+        })
+
+    })
+
+    .then(function(response) {
+
+        return response.json();
+
+    })
+
+    .then(function(data) {
+
+        console.log("AI RESPONSE:", data);
 
         if (!data.success) {
-            alert(data.message);
+
+            alert(data.message || "AI analysis failed");
+
             return;
         }
 
-        // Absent employee details
+
+        // =====================================
+        // SHOW RESULT SECTION
+        // =====================================
+
+        document
+            .getElementById("result")
+            .classList.remove("hidden");
+
+
+        // =====================================
+        // TASK DETAILS
+        // =====================================
+
         document.getElementById("absent").innerText =
-            data.absent_employee;
+            data.task.absent_employee;
 
         document.getElementById("task").innerText =
             data.task.task_name;
@@ -41,114 +87,250 @@ async function analyzeAbsence(employeeId) {
             data.task.task_type;
 
 
-        // Best replacement
-        const best = data.best_replacement;
+        currentTaskName =
+            data.task.task_name;
+
+
+        // =====================================
+        // BEST REPLACEMENT
+        // =====================================
+
+        currentReplacementEmployee =
+            data.recommended_employee.employee_id;
+
 
         document.getElementById("bestName").innerText =
-            best.name;
+            data.recommended_employee.name;
 
         document.getElementById("bestId").innerText =
-            best.employee_id;
+            data.recommended_employee.employee_id;
 
         document.getElementById("bestScore").innerText =
-            best.score;
+            data.recommended_employee.ai_score + "%";
 
 
-        // What-If Workload Impact
-        const whatIfBox = document.querySelector(".whatif-box");
+        // =====================================
+        // WHAT-IF WORKLOAD
+        // =====================================
 
-        const riskClass =
-            best.ripple_risk.toLowerCase() === "low"
-                ? "low-risk"
-                : "medium-risk";
+        document.querySelector(".whatif-box").innerHTML =
 
-        whatIfBox.innerHTML = `
-            <h3>🔮 What-If Workload Impact</h3>
+            "<h3>🔮 What-If Workload Impact</h3>" +
 
-            <p>
-                AI predicts the workload impact before reassignment.
-            </p>
+            "<p>" +
+            "AI predicts the workload impact before reassignment." +
+            "</p>" +
 
-            <div class="impact-row">
+            "<div class='impact-row'>" +
 
-                <div>
-                    <strong>
-                        ${best.name} (${best.employee_id})
-                    </strong>
+            "<div>" +
 
-                    <span class="${riskClass}">
-                        ${best.ripple_risk.toUpperCase()} RISK
-                    </span>
-                </div>
+            "<strong>Predicted Workload:</strong> " +
 
-                <p>
-                    Current Workload:
-                    ${best.current_workload}%
-                </p>
+            data.recommended_employee.current_workload +
 
-                <p>
-                    After Reassignment:
-                    <strong>${best.after_workload}%</strong>
-                </p>
+            "% → " +
 
-                <p>
-                    Ripple Effect:
-                    <strong>${best.ripple_risk}</strong>
-                </p>
+            data.recommended_employee.expected_workload +
 
-            </div>
+            "%" +
 
-            <div class="recommendation">
+            "<br><br>" +
 
-                🏆 <strong>AI Recommendation:</strong>
+            "<strong>Ripple Risk:</strong> " +
 
-                ${best.name} provides the lowest
-                operational disruption.
+            (data.recommended_employee.risk || "LOW") +
 
-            </div>
-        `;
+            "</div>" +
+
+            "</div>";
 
 
-        // Candidate Ranking
-        const ranking =
+        // =====================================
+        // CANDIDATE RANKING
+        // =====================================
+
+        var ranking =
             document.getElementById("ranking");
 
         ranking.innerHTML = "";
 
 
-        data.candidate_rankings.forEach(candidate => {
+        data.candidate_ranking.forEach(
+            function(candidate, index) {
 
-            const row =
-                document.createElement("tr");
+                var row =
+                    document.createElement("tr");
 
-            row.innerHTML = `
-                <td>
-                    ${candidate.name}
-                    (${candidate.employee_id})
-                </td>
 
-                <td>
-                    ${candidate.skill}
-                </td>
+                row.innerHTML =
 
-                <td>
-                    ${candidate.performance}
-                </td>
+                    "<td>" +
+                    (index + 1) +
+                    "</td>" +
 
-                <td>
-                    ${candidate.workload}%
-                </td>
+                    "<td>" +
+                    candidate.name +
+                    " (" +
+                    candidate.employee_id +
+                    ")" +
+                    "</td>" +
 
-                <td>
-                    <strong>
-                        ${candidate.score}
-                    </strong>
-                </td>
-            `;
+                    "<td>" +
+                    candidate.skills.join(", ") +
+                    "</td>" +
 
-            ranking.appendChild(row);
+                    "<td>" +
+                    candidate.performance +
+                    "%" +
+                    "</td>" +
 
-        });
+                    "<td>" +
+                    candidate.current_workload +
+                    "%" +
+                    "</td>" +
+
+                    "<td>" +
+                    candidate.ai_score +
+                    "%" +
+                    "</td>" +
+
+                    "<td>" +
+                    (candidate.risk || "LOW") +
+                    "</td>";
+
+
+                ranking.appendChild(row);
+
+            }
+        );
+
+    })
+
+    .catch(function(error) {
+
+        console.error(
+            "AI ERROR:",
+            error
+        );
+
+        alert(
+            "Cannot connect to SmartReassign AI backend."
+        );
+
+    });
+}
+
+
+// =============================================
+// MANAGER APPROVAL
+// =============================================
+
+async function approveReassignment() {
+
+    var message =
+        document.getElementById("approvalMessage");
+
+
+    message.innerText =
+        "Processing approval...";
+
+    message.style.color =
+        "orange";
+
+
+    try {
+
+        var response = await fetch(
+
+            "http://127.0.0.1:5000/approve-reassignment",
+
+            {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body: JSON.stringify({
+
+                    absent_employee:
+                        currentAbsentEmployee,
+
+                    replacement_employee:
+                        currentReplacementEmployee,
+
+                    task_name:
+                        currentTaskName
+
+                })
+
+            }
+
+        );
+
+
+        var data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            message.innerText =
+                "❌ " +
+                data.message;
+
+            message.style.color =
+                "red";
+
+            return;
+
+        }
+
+
+        var r =
+            data.reassignment;
+
+
+        message.innerHTML =
+
+            "✅ <strong>" +
+            "Task Successfully Reassigned!" +
+            "</strong><br><br>" +
+
+            "Task: " +
+            r.task +
+            "<br>" +
+
+            "From: " +
+            r.from_employee +
+            "<br>" +
+
+            "To: " +
+            r.replacement_name +
+            " (" +
+            r.to_employee +
+            ")<br>" +
+
+            "Workload: " +
+            r.previous_workload +
+            "% → " +
+            r.updated_workload +
+            "%<br>" +
+
+            "Status: " +
+            r.status;
+
+
+        message.style.color =
+            "green";
+
+        message.style.fontWeight =
+            "bold";
 
     }
 
@@ -156,51 +338,16 @@ async function analyzeAbsence(employeeId) {
 
         console.error(error);
 
-        alert(
-            "Cannot connect to SmartReassign AI backend. " +
-            "Make sure Flask server is running."
-        );
+        message.innerText =
+            "❌ Cannot connect to backend.";
+
+        message.style.color =
+            "red";
 
     }
-
 }
 
 
-// Manager Approval
-function approveReassignment() {
-
-    const message =
-        document.getElementById("approvalMessage");
-
-    message.innerText =
-        "✅ Task T002 successfully reassigned to Kavin (E003).";
-
-    message.style.color = "green";
-
-    message.style.fontWeight = "bold";
-
-}
-
-
-// Biometric Simulation
-function simulateBiometric() {
-
-    const scanStatus =
-        document.getElementById("scanStatus");
-
-    const scanEmployee =
-        document.getElementById("scanEmployee");
-
-    const scanResult =
-        document.getElementById("scanResult");
-
-
-    scanStatus.classList.remove("hidden");
-
-    scanEmployee.innerText =
-        "E002 - Priya";
-
-    scanResult.innerText =
-        "ABSENT";
-
-}
+console.log(
+    "SmartReassign JavaScript loaded"
+);

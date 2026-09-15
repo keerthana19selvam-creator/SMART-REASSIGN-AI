@@ -1,141 +1,359 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>SmartReassign AI</title>
-    <link rel="stylesheet" href="style.css">
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
+
 <header>
+
     <h1>SmartReassign AI</h1>
-    <p>AI-Powered Workforce Task Reassignment</p>
+
+    <p>
+        AI-Powered Workforce Task Reassignment
+    </p>
+
 </header>
+
+
 
 <main>
 
+
+    <!-- ========================================= -->
+    <!-- OVERVIEW -->
+    <!-- ========================================= -->
+
     <section class="overview">
-        <div class="card">
-            <h3>Employees</h3>
-            <strong>8</strong>
-        </div>
 
         <div class="card">
-            <h3>Present</h3>
-            <strong>7</strong>
+
+            <h3>Employees</h3>
+
+            <strong>8</strong>
+
         </div>
+
+
+        <div class="card">
+
+            <h3>Present</h3>
+
+            <strong>7</strong>
+
+        </div>
+
 
         <div class="card danger">
+
             <h3>Absent</h3>
+
             <strong>1</strong>
+
         </div>
+
 
         <div class="card warning">
+
             <h3>Tasks at Risk</h3>
+
             <strong>1</strong>
+
         </div>
+
     </section>
+
+
+
+    <!-- ========================================= -->
+    <!-- BIOMETRIC ATTENDANCE -->
+    <!-- ========================================= -->
 
     <section class="attendance">
-    <h2>🔐 Biometric Attendance</h2>
 
-    <p>Real-time attendance monitoring</p>
+        <h2>🔐 Biometric Attendance</h2>
 
-    <button onclick="simulateBiometric()">
-        📡 Simulate Biometric Scan
-    </button>
+        <p>
+            Real-time attendance monitoring
+        </p>
 
-    <div id="scanStatus" class="employee-row hidden">
-        <div>
-            <strong id="scanEmployee"></strong>
-            <span id="scanResult" class="absent"></span>
-        </div>
 
-        <button onclick="analyzeAbsence('E002')">
-            🤖 Analyze & Reassign
+        <button
+            onclick="simulateBiometric()"
+        >
+            📡 Simulate Biometric Scan
         </button>
-    </div>
-</section>
 
-    <section id="result" class="result hidden">
 
-        <h2>🤖 AI Reassignment Result</h2>
+        <div
+            id="scanStatus"
+            class="employee-row hidden"
+        >
 
-        <div class="task-box">
-            <p><strong>Absent Employee:</strong> <span id="absent"></span></p>
-            <p><strong>Task:</strong> <span id="task"></span></p>
-            <p><strong>Task Type:</strong> <span id="taskType"></span></p>
+            <div>
+
+                <strong id="scanEmployee"></strong>
+
+                <span
+                    id="scanResult"
+                    class="absent"
+                ></span>
+
+            </div>
+
+
+            <button
+                onclick="analyzeAbsence('E002')"
+            >
+                🤖 Analyze & Reassign
+            </button>
+
         </div>
-
-        <div class="best-box">
-            <h3>🏆 Best Replacement</h3>
-            <h2 id="bestName"></h2>
-            <p>Employee ID: <span id="bestId"></span></p>
-            <p>AI Suitability Score: <strong id="bestScore"></strong></p>
-        </div>
-        <div class="approval-box">
-    <h3>Manager Approval</h3>
-    <button onclick="approveReassignment()">
-        ✅ Approve & Reassign
-    </button>
-    <p id="approvalMessage"></p>
-</div>
-
-        <h3>Candidate Ranking</h3>
-
-        <table>
-            <div class="whatif-box">
-    <h3>🔮 What-If Workload Impact</h3>
-
-    <p>AI predicts the workload impact before reassignment.</p>
-
-    <div class="impact-row">
-        <div>
-            <strong>Kavin (E003)</strong>
-            <span class="low-risk">LOW RISK</span>
-        </div>
-
-        <p>Current Workload: 25%</p>
-        <p>After Reassignment: <strong>45%</strong></p>
-        <p>Ripple Effect: <strong>Minimal</strong></p>
-    </div>
-
-    <div class="impact-row">
-        <div>
-            <strong>Arun (E001)</strong>
-            <span class="medium-risk">MEDIUM RISK</span>
-        </div>
-
-        <p>Current Workload: 30%</p>
-        <p>After Reassignment: <strong>70%</strong></p>
-        <p>Ripple Effect: <strong>Moderate</strong></p>
-    </div>
-
-    <div class="recommendation">
-        🏆 <strong>AI Recommendation:</strong>
-        Kavin provides the lowest operational disruption.
-    </div>
-</div>
-            <thead>
-                <tr>
-                    <th>Employee</th>
-                    <th>Skill</th>
-                    <th>Performance</th>
-                    <th>Workload</th>
-                    <th>AI Score</th>
-                </tr>
-            </thead>
-
-            <tbody id="ranking"></tbody>
-        </table>
 
     </section>
+
+
+
+    <!-- ========================================= -->
+    <!-- AI RESULT -->
+    <!-- ========================================= -->
+
+    <section
+        id="result"
+        class="result hidden"
+    >
+
+        <h2>
+            🤖 AI Reassignment Result
+        </h2>
+
+
+
+        <!-- TASK DETAILS -->
+
+        <div class="task-box">
+
+            <p>
+
+                <strong>
+                    Absent Employee:
+                </strong>
+
+                <span id="absent"></span>
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Task:
+                </strong>
+
+                <span id="task"></span>
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Task Type:
+                </strong>
+
+                <span id="taskType"></span>
+
+            </p>
+
+        </div>
+
+
+
+        <!-- BEST REPLACEMENT -->
+
+        <div class="best-box">
+
+            <h3>
+                🏆 Best Replacement
+            </h3>
+
+
+            <h2 id="bestName">
+                -
+            </h2>
+
+
+            <p>
+
+                Employee ID:
+
+                <span id="bestId">
+                    -
+                </span>
+
+            </p>
+
+
+            <p>
+
+                AI Suitability Score:
+
+                <strong id="bestScore">
+                    -
+                </strong>
+
+            </p>
+
+        </div>
+
+
+
+        <!-- ===================================== -->
+        <!-- WHAT IF -->
+        <!-- ===================================== -->
+
+        <div class="whatif-box">
+
+            <h3>
+                🔮 What-If Workload Impact
+            </h3>
+
+
+            <p>
+                AI predicts the workload impact
+                before reassignment.
+            </p>
+
+
+            <div class="impact-row">
+
+                <div>
+
+                    <strong>
+                        Waiting for AI analysis...
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ===================================== -->
+        <!-- MANAGER APPROVAL -->
+        <!-- ===================================== -->
+
+        <div class="approval-box">
+
+            <h3>
+                Manager Approval
+            </h3>
+
+
+            <button
+                onclick="approveReassignment()"
+            >
+                ✅ Approve & Reassign
+            </button>
+
+
+            <p id="approvalMessage"></p>
+
+        </div>
+
+
+
+        <!-- ===================================== -->
+        <!-- CANDIDATE RANKING -->
+        <!-- ===================================== -->
+
+        <h3>
+            Candidate Ranking
+        </h3>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        #
+                    </th>
+
+                    <th>
+                        Employee
+                    </th>
+
+                    <th>
+                        Skills
+                    </th>
+
+                    <th>
+                        Performance
+                    </th>
+
+                    <th>
+                        Workload
+                    </th>
+
+                    <th>
+                        AI Score
+                    </th>
+
+                    <th>
+                        Risk
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="ranking">
+
+            </tbody>
+
+        </table>
+
+
+    </section>
+
 
 </main>
 
+
+
+<!-- ============================================= -->
+<!-- JAVASCRIPT -->
+<!-- ============================================= -->
+
 <script src="script.js"></script>
 
+
 </body>
+
 </html>
+```
