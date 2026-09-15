@@ -1,3 +1,4 @@
+const API_URL = "https://smart-reassign-ai.onrender.com";
 var currentAbsentEmployee = null;
 var currentReplacementEmployee = null;
 var currentTaskName = null;
@@ -30,8 +31,7 @@ function analyzeAbsence(employeeId) {
 
     currentAbsentEmployee = employeeId;
 
-    fetch("http://127.0.0.1:5000/ai-reassign", {
-
+    fetch(API_URL + "/ai-reassign", {
         method: "POST",
 
         headers: {
@@ -243,7 +243,7 @@ async function approveReassignment() {
 
         var response = await fetch(
 
-            "http://127.0.0.1:5000/approve-reassignment",
+            API_URL + "/approve-reassignment",
 
             {
 
